@@ -43,7 +43,7 @@ describe("Link beetween people checking", function() {
   
 });
 
-describe("Generate data to UI.", function() {
+describe("Collaborator features.", function() {
 
     it("Pairing Map should be created with no collaborators.", function() {
         var pairingMap = new PairingMap();
@@ -87,6 +87,36 @@ describe("Generate data to UI.", function() {
         expect(pairingMap.getCollaborator('john')).toEqual({'id':'john','name':'John Simpson', 'imageUrl':'http://localhost/avatar/simpson.jpg', 'group':1});
     });
 
+    it("Should throw an error when try to update a non existing collaborator.", function() {
+        var pairingMap = new PairingMap();
+        try {
+            pairingMap.updateCollaborator('john', {"group": 4});
+            throw new Error("Test must fail.");
+        } catch (e) {
+            expect(e.message).toEqual("Cannot find the collaborator.");
+            expect(e.name).toEqual("CollaboratorNotFoundException");
+        }
+    });
+
+    it("Should update the collaborator group.", function() {
+        var pairingMap = new PairingMap();
+        pairingMap.addCollaborator("john", "John Simpson", "http://localhost/avatar/simpson.jpg", 1);
+        pairingMap.updateCollaborator('john', {"group": 4});
+
+        expect(pairingMap.collaborators[0]).toEqual({"id": 'john', "name": 'John Simpson', "imageUrl": 'http://localhost/avatar/simpson.jpg', "group": 4});
+    });
+
+    it("Should not update the collaborator ID.", function() {
+        var pairingMap = new PairingMap();
+        pairingMap.addCollaborator("john", "John Simpson", "http://localhost/avatar/simpson.jpg", 1);
+        pairingMap.updateCollaborator('john', {"id": "j123"});
+        
+        expect(pairingMap.collaborators[0]).toEqual({"id": 'john', "name": 'John Simpson', "imageUrl": 'http://localhost/avatar/simpson.jpg', "group": 1});
+    });
+
+});
+
+describe("Generate data to UI.", function() {
     it("Should build the pairing map.", function() {
         var pairingMap = new PairingMap();
         pairingMap.map = [

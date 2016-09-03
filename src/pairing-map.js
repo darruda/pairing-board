@@ -35,6 +35,23 @@ function PairingMap() {
 		return index;
 	}
 
+	this.updateCollaborator = function(id, data) {
+		var collaborator = this.getCollaborator(id);
+		if (!collaborator) {
+			var error = new Error("Cannot find the collaborator.");
+			error.name = "CollaboratorNotFoundException";
+			throw error;
+		}
+
+		for (key in data) {
+			if (key != "id") {
+				collaborator[key] = data[key];
+			}
+		}
+
+		return true;
+	};
+
 	this.getIndex = function(id) {
 		var index = -1;
 		for (var i = 0; i < this.collaborators.length; i++) {
