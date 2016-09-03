@@ -66,11 +66,11 @@ function PairingMap() {
 			var sourceIndex = self.addCollaborator(link.source, link.source, null, 1);
 			var targetIndex = self.addCollaborator(link.target, link.target, null, 1);
 
-			links.push({"source":sourceIndex,"target":targetIndex,"value":link.pairings});
+			links.push({"source":sourceIndex,"target":targetIndex,"pairings":link.pairings});
 		});
 
 		this.collaborators.forEach(function(collaborator) {
-			nodes.push({"name": collaborator.name, "group": collaborator.group});
+			nodes.push({"id": collaborator.id, "name": collaborator.name, "group": collaborator.group, "imageUrl": collaborator.imageUrl});	
 		});
 
 		return {"nodes":nodes,"links":links};

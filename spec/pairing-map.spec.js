@@ -97,15 +97,15 @@ describe("Generate data to UI.", function() {
 
         var expectValue = {
           "nodes": [
-            {"name": "john", "group": 1},
-            {"name": "bran", "group": 1},
-            {"name": "roy", "group": 1},
-            {"name": "bob", "group": 1}
+            {"id":"john", "name": "john", "group": 1, "imageUrl": null},
+            {"id":"bran", "name": "bran", "group": 1, "imageUrl": null},
+            {"id":"roy", "name": "roy", "group": 1, "imageUrl": null},
+            {"id":"bob", "name": "bob", "group": 1, "imageUrl": null}
           ],
           "links": [
-            {"source": 0, "target": 1, "value": 1},
-            {"source": 2, "target": 1, "value": 2},
-            {"source": 0, "target": 3, "value": 1},
+            {"source": 0, "target": 1, "pairings": 1},
+            {"source": 2, "target": 1, "pairings": 2},
+            {"source": 0, "target": 3, "pairings": 1},
             ]
         };
 
