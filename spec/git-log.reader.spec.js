@@ -24,8 +24,17 @@ describe("Test suite for the git log reader.", function() {
 
 
 	it("Should return the pairing information from the commit message.", function() {
-    	
     	var message = "CARD-123 [John, Bob] Create login page.";
     	expect(gitLogReader.getPairingInfo(message)).toEqual("John, Bob");
+    });
+
+    it("Should return a blank array if there no pairing match on the commit message.", function() {
+		var message = "CARD-000 Revert access control feature.";
+    	expect(gitLogReader.getCollaborators(message)).toEqual([]);
+    });
+
+    it("Should extract the collaborators from the pairing information.", function() {
+    	var message = "CARD-123 [John, Bob] Create login page.";
+    	expect(gitLogReader.getCollaborators(message)).toEqual(["John", "Bob"]);
     });
 });

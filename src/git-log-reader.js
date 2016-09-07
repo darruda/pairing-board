@@ -22,6 +22,18 @@ function GitLogReader() {
 		return result[1];
 	};
 
+	this.getCollaborators = function(message) {
+		var pairingInfo = this.getPairingInfo(message);
+
+		if (!pairingInfo) {
+			return [];
+		}
+
+		return pairingInfo.split(',').map((collaborator) => {
+			return collaborator.trim();
+		});
+	};
+
 };
 
 module.exports = GitLogReader;
