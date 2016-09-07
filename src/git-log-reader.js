@@ -1,4 +1,15 @@
-function GitLogReader() {
+const path = require('path');
+var Promise = require("bluebird");
+
+function GitLogReader(execDir, childProcess) {
+	var self = this;
+	this.execDir = execDir;
+	if (childProcess) {
+		this.childProcess = childProcess;
+	} else {
+		this.childProcess = require('child_process');
+	}
+
 	var MESSAGE_REGEX = new RegExp("<(.+)><(.+)><(.+)>");
 	var PAIRING_REGEX = "\\[([\\w\\s,]+)\\]";
 
@@ -34,6 +45,18 @@ function GitLogReader() {
 		});
 	};
 
+	this.getLog = function() {
+		return new Promise(function (resolve, reject) {
+			var t = self.childProcess.exec(path.relative(execDir, "git") + " log --pretty=format:%s", (error, stdout, stderr) => {
+				if (error) {
+			    	console.error(stderr);
+			    	reject(new Error("Error getting git log."))
+			  	} else {
+			  		resolve(stdout);
+			  	}
+			});
+		});
+	};
 };
 
 module.exports = GitLogReader;
