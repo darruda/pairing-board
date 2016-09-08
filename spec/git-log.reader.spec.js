@@ -66,7 +66,7 @@ describe("Get logs from git command line tests.", function() {
 
 	var gitLogReader;
 	beforeEach(function() {
-	    gitLogReader = new GitLogReader(".", fakeChildProcess);
+	    gitLogReader = new GitLogReader(".git", fakeChildProcess);
 	});
 	 
 
@@ -85,7 +85,7 @@ describe("Get logs from git command line tests.", function() {
 		fakeChildProcess.createSucessExec(stout);
 		
 		gitLogReader.getLogs().then(function(output) {
-	    	expect(fakeChildProcess.command).toBe("git log --pretty=format:%s");
+	    	expect(fakeChildProcess.command).toBe("git --git-dir=.git log master --pretty=format:%s");
 	    	expect(output).toBe(stout);
 	    	done();
     	});
@@ -124,7 +124,7 @@ describe("Get logs from git command line tests.", function() {
 		
 		var date = new Date(Date.UTC(2016, 8, 7));
 		gitLogReader.getPairs(date).then(function(output) {
-	    	expect(fakeChildProcess.command).toEqual("git log --pretty=format:%s --since=2016-09-07T00:00:00.000Z");
+	    	expect(fakeChildProcess.command).toEqual("git --git-dir=.git log master --pretty=format:%s --since=2016-09-07T00:00:00.000Z");
 	    	done();
     	});
     });

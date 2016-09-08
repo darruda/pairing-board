@@ -1,10 +1,9 @@
-const path = require('path');
 const BREAK_LINE = require('os').EOL;
 var Promise = require("bluebird");
 
-function GitLogReader(execDir, childProcess) {
+function GitLogReader(repositoryPath, childProcess) {
 	var self = this;
-	this.execDir = execDir;
+	this.repositoryPath = repositoryPath;
 	if (childProcess) {
 		this.childProcess = childProcess;
 	} else {
@@ -48,7 +47,7 @@ function GitLogReader(execDir, childProcess) {
 
 	this.getLogs = function(since) {
 		return new Promise(function (resolve, reject) {
-			var command = path.relative(execDir, "git").concat(" log --pretty=format:%s");
+			var command = "git".concat(" --git-dir=", repositoryPath, " log master --pretty=format:%s");
 			if (since) {
 				command = command.concat(" --since=", since.toISOString());
 			}
