@@ -54,7 +54,7 @@ function GitLogReader(repositoryPath, childProcess) {
 			var t = self.childProcess.exec(command, (error, stdout, stderr) => {
 				if (error) {
 			    	console.error(stderr);
-			    	reject(new Error("Error getting git log."))
+			    	reject(new Error("Error on getting git log: " + error.message));
 			  	} else {
 			  		resolve(stdout);
 			  	}

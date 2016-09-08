@@ -47,19 +47,23 @@ describe("Get logs from git command line tests.", function() {
 		this.sucess;
 		this.command;
 		this.args;
+		this.errorMessage;
 
 		this.createSucessExec = function(stout) {
 			this.content = stout;
-			this.sucess = true;
+		};
+
+		this.createErrorExec = function(error) {
+			this.errorMessage = error;
 		};
 
 		this.exec = function(command, callback) {
 			this.command = command;
 
-			if (this.sucess) {
-				callback(null, this.content, null);
+			if (this.errorMessage) {
+				callback(new Error(this.errorMessage), null, this.content);
 			} else {
-				callback(new Error("Error processing."), null, this.content);
+				callback(null, this.content, null);
 			}
 		};
 	};
@@ -125,6 +129,15 @@ describe("Get logs from git command line tests.", function() {
 		var date = new Date(Date.UTC(2016, 8, 7));
 		gitLogReader.getPairs(date).then(function(output) {
 	    	expect(fakeChildProcess.command).toEqual("git --git-dir=.git log master --pretty=format:%s --since=2016-09-07T00:00:00.000Z");
+	    	done();
+    	});
+    });
+
+    it("Promisse should be reject when an error is thrown during command execution.", function(done) {
+		fakeChildProcess.createErrorExec("stdout maxBuffer exceeded");
+		
+		gitLogReader.getPairs().catch(e => {
+	    	expect(e.message).toEqual("Error on getting git log: stdout maxBuffer exceeded");
 	    	done();
     	});
     });
