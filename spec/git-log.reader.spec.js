@@ -64,9 +64,13 @@ describe("Get logs from git command line tests.", function() {
 		};
 	};
 
-	var gitLogReader = new GitLogReader(".", fakeChildProcess);	
+	var gitLogReader;
+	beforeEach(function() {
+	    gitLogReader = new GitLogReader(".", fakeChildProcess);
+	});
+	 
 
-	it("Should return the logs content.", function() {
+	it("Should return the logs content.", function(done) {
     	var stout = "[Diego] Add get collaborators method to the git log reader.\n" +
 					"[Diego] Create git log reader module.\n" +
 					"[Diego] Add update collaborator capability.\n" +
@@ -80,9 +84,48 @@ describe("Get logs from git command line tests.", function() {
 		
 		fakeChildProcess.createSucessExec(stout);
 		
-		gitLogReader.getLog().then(function(output) {
+		gitLogReader.getLogs().then(function(output) {
+	    	expect(fakeChildProcess.command).toBe("git log --pretty=format:%s");
 	    	expect(output).toBe(stout);
+	    	done();
     	});
-    	expect(fakeChildProcess.command).toBe("git log --pretty=format:%s");
+    });
+
+    it("Should return the pairing information from the git log.", function(done) {
+    	var stout = "[John, Bob] A good commit message.\n" +
+					"[Bran, Thomas] A good commit message.\n" +
+					"[Ryan, John, Bob] A good commit message.\n" +
+					"Merge from some branch to master.\n" +
+					"[Donna, Bob] A good commit message.\n" +
+					"[Eddy, Lisa] A good commit message.\n" +
+					"[Lisa, Bran] A good commit message.\n" +
+					"A message which does not follow the pattern.\n" +
+					"[John, Bob] A good commit message.\n";
+		
+		fakeChildProcess.createSucessExec(stout);
+		gitLogReader.getPairs().then(function(output) {
+			var expectResult = [
+				["John", "Bob"],
+				["Bran", "Thomas"],
+				["Ryan", "John", "Bob"],
+				["Donna", "Bob"],
+				["Eddy", "Lisa"],
+				["Lisa", "Bran"],
+				["John", "Bob"]
+			];
+			
+	    	expect(output).toEqual(expectResult);
+	    	done();
+    	});
+    });
+
+    it("Should filter pairing infromation by date.", function(done) {
+    	fakeChildProcess.createSucessExec("Any log information");
+		
+		var date = new Date(Date.UTC(2016, 8, 7));
+		gitLogReader.getPairs(date).then(function(output) {
+	    	expect(fakeChildProcess.command).toEqual("git log --pretty=format:%s --since=2016-09-07T00:00:00.000Z");
+	    	done();
+    	});
     });
 });

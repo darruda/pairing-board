@@ -1,4 +1,5 @@
 const path = require('path');
+const BREAK_LINE = require('os').EOL;
 var Promise = require("bluebird");
 
 function GitLogReader(execDir, childProcess) {
@@ -45,9 +46,13 @@ function GitLogReader(execDir, childProcess) {
 		});
 	};
 
-	this.getLog = function() {
+	this.getLogs = function(since) {
 		return new Promise(function (resolve, reject) {
-			var t = self.childProcess.exec(path.relative(execDir, "git") + " log --pretty=format:%s", (error, stdout, stderr) => {
+			var command = path.relative(execDir, "git").concat(" log --pretty=format:%s");
+			if (since) {
+				command = command.concat(" --since=", since.toISOString());
+			}
+			var t = self.childProcess.exec(command, (error, stdout, stderr) => {
 				if (error) {
 			    	console.error(stderr);
 			    	reject(new Error("Error getting git log."))
@@ -55,6 +60,20 @@ function GitLogReader(execDir, childProcess) {
 			  		resolve(stdout);
 			  	}
 			});
+		});
+	};
+
+	this.getPairs = function(since) {
+		return this.getLogs(since).then(function(logs) {
+			var messages = logs.split(BREAK_LINE);
+
+			var pairs = messages.map(function(message) {
+				return self.getCollaborators(message);
+			}).filter(function(pair) {
+				return pair.length;
+			});
+			
+			return pairs;
 		});
 	};
 };
