@@ -1,7 +1,10 @@
+var Core = require('./core-functions.js');
+
 function PairingMap() { 
 	var self = this;
 	this.map = [];
 	this.collaborators = [];
+	var core = new Core();
 
 	this.addLink = function(source, target) {
 		var link = this.getLink(source, target);
@@ -74,6 +77,12 @@ function PairingMap() {
 		}
 		return collaborator;
 	}
+
+	this.addPairs = function(pairs) {
+	    core.calculatePairs(pairs).forEach(function(pair) {
+	      self.addLink(pair[0], pair[1]);
+	    });
+	};
 
 	this.build = function() {
 		var nodes = [];

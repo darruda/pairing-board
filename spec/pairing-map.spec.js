@@ -142,3 +142,15 @@ describe("Generate data to UI.", function() {
         expect(pairingMap.build()).toEqual(expectValue);
     });
 });
+
+describe("Add pairing information to the pairing map.", function() {
+    var pairingMap;
+    beforeEach(function() {
+        pairingMap = new PairingMap();
+    });
+
+    it("Should create links from the pairs.", function() {
+        pairingMap.addPairs([["bob", "ryan"],["john","ryan"],["bran","roy","bob"]]);
+        expect(pairingMap.map.length).toBe(5);
+    });
+});
