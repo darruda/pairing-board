@@ -33,7 +33,8 @@ function PairingMap() {
 		var index = this.getIndex(id);
 		if (index == -1) {
 			index = this.collaborators.length;
-			this.collaborators.push({"id":id, "name": name, "imageUrl":imageUrl, "group":group});
+			var multipleIds = Array.isArray(id) ? id : [id];
+			this.collaborators.push({"id":multipleIds, "name": name, "imageUrl":imageUrl, "group":group});
 		}
 		return index;
 	}
@@ -55,11 +56,12 @@ function PairingMap() {
 		return true;
 	};
 
-	this.getIndex = function(id) {
+	this.getIndex = function(searchId) {
 		var index = -1;
 		for (var i = 0; i < this.collaborators.length; i++) {
 			var collaborator = this.collaborators[i];
-			if (self.compare(collaborator.id, id)) {
+
+			if (collaborator.id.some(id => self.compare(id, searchId))) {
 				index = i;
 				break;
 			}
