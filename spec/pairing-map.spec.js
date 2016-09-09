@@ -40,7 +40,10 @@ describe("Link beetween people checking", function() {
     	expect(link.pairings).toBe(3);
     });
 	
-  
+    it("ID comparison should be non case sensitive.", function() {
+        var pairingMap = new PairingMap();
+        expect(pairingMap.compare('John', 'john')).toBeTruthy();
+    });
 });
 
 describe("Collaborator features.", function() {
@@ -123,7 +126,7 @@ describe("Generate data to UI.", function() {
             {"source":"john", "target":"bran", "pairings":1},
             {"source":"roy", "target":"bran", "pairings":2}
         ];
-        pairingMap.addLink('john', 'bob');
+        pairingMap.addLink('John', 'bob');
 
         var expectValue = {
           "nodes": [

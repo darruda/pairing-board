@@ -19,8 +19,8 @@ function PairingMap() {
 	this.getLink = function(source, target) {
 		var foundLink;
 		this.map.some(function(link) {
-			if ((link.source == source && link.target == target)
-					||(link.source == target && link.target == source	)) {
+			if ((self.compare(link.source, source) && self.compare(link.target, target))
+					|| (self.compare(link.source, target) && self.compare(link.target, source))) {
 				foundLink = link;
 				return true;
 			}
@@ -28,6 +28,10 @@ function PairingMap() {
 		});
 		return foundLink;
 	}
+
+	this.compare = function(element1, element2) {
+		return element1.localeCompare(element2, 'pt-BR', {sensitivity: 'base'}) == 0;
+	};
 
 	this.addCollaborator = function(id, name, imageUrl, group) {
 		var index = this.getIndex(id);
@@ -59,7 +63,7 @@ function PairingMap() {
 		var index = -1;
 		for (var i = 0; i < this.collaborators.length; i++) {
 			var collaborator = this.collaborators[i];
-			if (collaborator.id == id) {
+			if (self.compare(collaborator.id, id)) {
 				index = i;
 				break;
 			}
