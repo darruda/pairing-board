@@ -1,4 +1,5 @@
 var Core = require('./core-functions.js');
+var _ = require('underscore');
 
 function PairingMap() { 
 	var self = this;
@@ -17,16 +18,11 @@ function PairingMap() {
 	}
 
 	this.getLink = function(source, target) {
-		var foundLink;
-		this.map.some(function(link) {
-			if ((self.compare(link.source, source) && self.compare(link.target, target))
-					|| (self.compare(link.source, target) && self.compare(link.target, source))) {
-				foundLink = link;
-				return true;
-			}
-			return false;
+		return _.find(this.map, function(link) {
+			return (self.compare(link.source, source) && self.compare(link.target, target))
+				   || (self.compare(link.source, target) && self.compare(link.target, source));
+
 		});
-		return foundLink;
 	}
 
 	this.compare = function(element1, element2) {
