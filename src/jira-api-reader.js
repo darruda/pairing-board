@@ -45,8 +45,10 @@ function JiraApiReader(config, httpsLib) {
 		}
 	}
 
-	function addUserInfo(user) {
-		users.push({"id": user.key, "name": user.displayName,"imageUrl": user.avatarUrls["32x32"]});
+	function addUserInfo(jiraUser) {
+		if (!users.some(user => user.id == jiraUser.key)) {
+			users.push({"id": jiraUser.key, "name": jiraUser.displayName,"imageUrl": jiraUser.avatarUrls["32x32"]});
+		}
 	}
 
 	this.getPairs = function(issue) {

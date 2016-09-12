@@ -152,7 +152,22 @@ describe("Test suite for the JIRA API Reader.", function() {
 
 		jira.processIssue(issue);
     	expect(jira.getUsers()).toEqual(expectResult);
-    });    
+    });
+
+	it("Should not add the same user more than once.", function() {
+    	var expectResult = [
+    		{"id":"ryan", "name":"Ryan B.","imageUrl":"https://localhost/secure/useravatar?size=medium&ownerId=ryan&avatarId=1"},
+			{"id":"bob", "name":"Bob G.","imageUrl":"https://localhost/secure/useravatar?size=medium&ownerId=bob&avatarId=2"},
+			{"id":"thomas", "name":"Thomas T.","imageUrl":"https://localhost/secure/useravatar?size=medium&ownerId=thomas&avatarId=3"},
+			{"id":"john", "name":"John Simpson","imageUrl":"https://localhost/secure/useravatar?size=medium&ownerId=john&avatarId=4"},
+			{"id":"bran", "name":"Brandon L.","imageUrl":"https://localhost/secure/useravatar?size=medium&ownerId=bran&avatarId=5"}
+		];
+
+		jira.processIssue(issue);
+		jira.processIssue(incompleteIssue);
+    	expect(jira.getUsers()).toEqual(expectResult);
+    });
+
 });
 
 describe("Jira API listening tests.", function() {
