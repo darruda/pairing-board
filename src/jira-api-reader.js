@@ -1,16 +1,37 @@
-function JiraApiReader(issue) {
-	
-	if (!issue) {
-		var error = new Error("You must inform an issue on the constructor.");
-		error.name = "ArgumentException";
-		throw error;
-	}
+var Promise = require("bluebird");
 
+function JiraApiReader(config, httpsLib) {
+	validateConfiguration(config);
+	var self = this;
 	var users = [];
 	var pairs = [];
+	
+	var https;
+	if (httpsLib) {
+		https = httpsLib;
+	} else {
+		https = require('https');
+	}
 
-	appendWorkStream(issue.fields.customfield_10073); // Developers
-	appendWorkStream(issue.fields.customfield_10074); // QAs
+	function validateConfiguration(config) {
+		var requiredKeys = ["hostname", "url", "base64Auth"];
+		var missingKeys = [];
+		if (config) {
+			requiredKeys.forEach(key => {
+				if (!config[key]) {
+					missingKeys.push(key);
+				}
+			});
+		} else {
+			missingKeys = requiredKeys;
+		}
+
+		if (missingKeys.length) {
+			var error = new Error("The following information are missing: ".concat(missingKeys.join(', '), "."));
+			error.name = "ArgumentException";
+			throw error;
+		}
+	}
 
 	function appendWorkStream(workstream) {
 		if (workstream) {
@@ -19,6 +40,8 @@ function JiraApiReader(issue) {
 				addUserInfo(user);
 				pair.push(user.key);
 			});
+
+			// return pair;
 			pairs.push(pair);
 		}
 	}
@@ -34,7 +57,55 @@ function JiraApiReader(issue) {
 
 	this.getUsers = function() {
 		return users;
-	}
+	};
+
+	this.processIssue = function(issue) {
+		appendWorkStream(issue.fields.customfield_10073); // Developers
+		appendWorkStream(issue.fields.customfield_10074); // QAs
+	};
+
+	this.processData = function(jiraData) {
+		jiraData.issues.forEach(function(issue) {
+			self.processIssue(issue);
+		});
+		return pairs;
+	};
+
+	this.getIssues = function() {
+		return new Promise(function (resolve, reject) {
+			var options = {
+		        method: 'GET',
+		        hostname: config.hostname,
+		        port: 443,
+		        path: config.url,
+		        rejectUnauthorized: false,
+		        headers: {
+		          'Authorization': 'Basic ' + config.base64Auth,
+		          "Content-Type": "application/json"
+		        }
+		    };
+
+		    var fullData = '';
+		    https.get(options, restResponse => {
+		      if (restResponse.statusCode >= 300) {
+		          reject(new Error(`Error ${restResponse.statusCode} during Jira informantion retrieve.`));
+		      } else {
+		        restResponse.on('data', (d) => {
+		          fullData = fullData.concat(d);
+		        });
+
+		        restResponse.on('end', () => {
+		          	resolve(fullData);
+		        });
+		      }
+
+		    }).on('error', e => {
+		      reject(e);
+		    });
+		}).then(function(data) {
+			self.processData(JSON.parse(data))
+		});
+	};
 }
 
 module.exports = JiraApiReader;
