@@ -40,8 +40,7 @@ function JiraApiReader(config, httpsLib) {
 				addUserInfo(user);
 				pair.push(user.key);
 			});
-
-			// return pair;
+			
 			pairs.push(pair);
 		}
 	}
@@ -111,7 +110,7 @@ function JiraApiReader(config, httpsLib) {
 		      reject(e);
 		    });
 		}).then(function(data) {
-			self.processData(JSON.parse(data))
+			return self.processData(JSON.parse(data))
 		});
 	};
 }

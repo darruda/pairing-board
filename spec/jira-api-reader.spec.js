@@ -193,8 +193,8 @@ describe("Jira API listening tests.", function() {
 	});
 	
 	it("Should return a successful promisse.", function(done) {
-		jiraApiReader.getIssues().then(function() {
-			expect(jiraApiReader.getPairs()).toEqual([['ryan','bob', 'thomas'],['john','bran'],['ryan','bob', 'thomas']]);
+		jiraApiReader.getIssues().then(function(pairs) {
+			expect(pairs).toEqual([['ryan','bob', 'thomas'],['john','bran'],['ryan','bob', 'thomas']]);
 			done();
 		});
 	});
