@@ -1,6 +1,6 @@
 var JiraApiReader = require('../src/jira-api-reader.js');
 
-var fakeConfig = {hostname: "JIRA_HOST_NAME", url: "JIRA_URL", base64Auth: "0123456789"};
+var fakeConfig = {hostname: "JIRA_HOST_NAME", url: "JIRA_URL", jql: "JIRA JQL", base64Auth: "0123456789"};
 var developers = [  
 	{  
 	  "name":"Ryan",
@@ -74,7 +74,7 @@ describe("Jira API Reader consctructors tests.", function(){
     		new JiraApiReader();
     		done(new Error("The test must throw an error."));
     	} catch (error) {
-    		expect(error.message).toEqual("The following information are missing: hostname, url, base64Auth.");
+    		expect(error.message).toEqual("The following information are missing: hostname, url, jql, base64Auth.");
     		expect(error.name).toEqual("ArgumentException");
     		done();
     	}
@@ -82,7 +82,7 @@ describe("Jira API Reader consctructors tests.", function(){
 
 	it("Should throw an error when hostname is not informed.", function(done) {
     	try {
-    		new JiraApiReader({url: "JIRA_URL", base64Auth: "0123456789"});
+    		new JiraApiReader({url: "JIRA_URL", jql: "JIRA_JQL", base64Auth: "0123456789"});
     		done(new Error("The test must throw an error."));
     	} catch (error) {
     		expect(error.message).toEqual("The following information are missing: hostname.");
@@ -93,10 +93,21 @@ describe("Jira API Reader consctructors tests.", function(){
 
 	it("Should throw an error when url is not informed.", function(done) {
     	try {
-    		new JiraApiReader({hostname: "JIRA_HOST_NAME", base64Auth: "0123456789"});
+    		new JiraApiReader({hostname: "JIRA_HOST_NAME", jql: "JIRA_JQL", base64Auth: "0123456789"});
     		done(new Error("The test must throw an error."));
     	} catch (error) {
     		expect(error.message).toEqual("The following information are missing: url.");
+    		expect(error.name).toEqual("ArgumentException");
+    		done();
+    	}
+	});
+
+	it("Should throw an error when jql is not informed.", function(done) {
+    	try {
+    		new JiraApiReader({hostname: "JIRA_HOST_NAME", url: "JIRA_URL", base64Auth: "0123456789"});
+    		done(new Error("The test must throw an error."));
+    	} catch (error) {
+    		expect(error.message).toEqual("The following information are missing: jql.");
     		expect(error.name).toEqual("ArgumentException");
     		done();
     	}
@@ -209,19 +220,26 @@ describe("Jira API listening tests.", function() {
 	});
 
 	it("Parameter should be informed on the request options.", function() {
-			var expectedOptions = {
-		        method: 'GET',
-		        hostname: 'JIRA_HOST_NAME',
-		        port: 443,
-		        path: 'JIRA_URL',
-		        rejectUnauthorized: false,
-		        headers: {
-		          'Authorization': 'Basic 0123456789',
-		          "Content-Type": "application/json"
-		        }
-		    };
+		var expectedOptions = {
+	        method: 'GET',
+	        hostname: 'JIRA_HOST_NAME',
+	        port: 443,
+	        path: 'JIRA_URL?jql=JIRA%20JQL',
+	        rejectUnauthorized: false,
+	        headers: {
+	          'Authorization': 'Basic 0123456789',
+	          "Content-Type": "application/json"
+	        }
+	    };
 
 		jiraApiReader.getIssues();
 		expect(httpsMock.options).toEqual(expectedOptions);
+	});
+
+	it("Should include the custom fields as parameters on the request path.", function() {
+	    var config = {hostname: "JIRA_HOST_NAME", url: "JIRA_URL", jql: "JIRA JQL", fields: ["field1", "field2"], base64Auth: "0123456789"};
+		jiraApiReader = new JiraApiReader(config, httpsMock);
+		jiraApiReader.getIssues();
+		expect(httpsMock.options.path).toEqual('JIRA_URL?jql=JIRA%20JQL&fields=field1,field2');
 	});
 });

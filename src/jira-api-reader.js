@@ -14,7 +14,7 @@ function JiraApiReader(config, httpsLib) {
 	}
 
 	function validateConfiguration(config) {
-		var requiredKeys = ["hostname", "url", "base64Auth"];
+		var requiredKeys = ["hostname", "url", "jql", "base64Auth"];
 		var missingKeys = [];
 		if (config) {
 			requiredKeys.forEach(key => {
@@ -71,13 +71,21 @@ function JiraApiReader(config, httpsLib) {
 		return pairs;
 	};
 
+	var getRequestPath = function() {
+		var path = config.url .concat("?jql=", encodeURIComponent(config.jql));
+		if (config.fields && config.fields.length) {
+			path = path.concat("&", "fields=", config.fields.join(','));
+		}
+		return path;
+	};
+
 	this.getIssues = function() {
 		return new Promise(function (resolve, reject) {
 			var options = {
 		        method: 'GET',
 		        hostname: config.hostname,
 		        port: 443,
-		        path: config.url,
+		        path: getRequestPath(),
 		        rejectUnauthorized: false,
 		        headers: {
 		          'Authorization': 'Basic ' + config.base64Auth,
