@@ -30,6 +30,10 @@ function PairingMap() {
 	};
 
 	this.addCollaborator = function(id, name, imageUrl, group) {
+		if (!id) {
+			throw new Error("ID cannot be null.");
+		}
+
 		var index = this.getIndex(id);
 		if (index == -1) {
 			index = this.collaborators.length;

@@ -47,10 +47,20 @@ describe("Link beetween people checking", function() {
 });
 
 describe("Collaborator features.", function() {
-
     it("Pairing Map should be created with no collaborators.", function() {
         var pairingMap = new PairingMap();
         expect(pairingMap.collaborators.length).toBe(0);
+    });
+
+    it("Should not allow to add a collaborator with null ID.", function(done) {
+        var pairingMap = new PairingMap();
+        try {
+            pairingMap.addCollaborator(undefined);
+            done(new Error("The test must throw an error."));
+        } catch(e) {
+            expect(e.message).toEqual("ID cannot be null.");
+            done();
+        }
     });
 
     it("Should return the collaborator index on for added collaborator.", function() {
