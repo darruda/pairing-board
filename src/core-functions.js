@@ -4,7 +4,7 @@ function Core() {
 	this.splitGroup = function(group) {
 		var remainingGroup = group.slice().reverse();
 		var splitPairs = [];
-    	
+
 		while (remainingGroup.length > 1) {
 	    	var pairDriver = remainingGroup.pop();
 
@@ -21,7 +21,7 @@ function Core() {
 			if (pair.length > 2) {
 				var newPairs = self.splitGroup(pair);
 				calculatedPairs = calculatedPairs.concat(newPairs);
-			} else if (pair.length == 2) {
+			} else if (pair.length === 2) {
 				calculatedPairs.push(pair);
 			}
 		});

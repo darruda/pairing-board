@@ -10,13 +10,13 @@ function JiraApiReader() {
 				addUserInfo(user);
 				pair.push(user.key);
 			});
-			
+
 			pairs.push(pair);
 		}
 	}
 
 	function addUserInfo(jiraUser) {
-		if (!users.some(user => user.id == jiraUser.key)) {
+		if (!users.some(user => user.id === jiraUser.key)) {
 			users.push({"id": jiraUser.key, "name": jiraUser.displayName,"imageUrl": jiraUser.avatarUrls["32x32"]});
 		}
 	}

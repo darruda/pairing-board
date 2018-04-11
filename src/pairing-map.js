@@ -1,7 +1,7 @@
 var Core = require('./core-functions.js');
 var _ = require('underscore');
 
-function PairingMap() { 
+function PairingMap() {
 	var self = this;
 	this.map = [];
 	this.collaborators = [];
@@ -9,7 +9,7 @@ function PairingMap() {
 
 	this.addLink = function(source, target) {
 		var link = this.getLink(source, target);
-		if (link == undefined) {
+		if (link === undefined) {
 			this.map.push({"source":source, "target":target, "pairings":1});
 		} else {
 			link.pairings = link.pairings + 1;
@@ -26,7 +26,7 @@ function PairingMap() {
 	}
 
 	this.compare = function(element1, element2) {
-		return element1.localeCompare(element2, 'pt-BR', {sensitivity: 'base'}) == 0;
+		return element1.localeCompare(element2, 'pt-BR', {sensitivity: 'base'}) === 0;
 	};
 
 	this.addCollaborator = function(id, name, imageUrl, group) {
@@ -35,7 +35,7 @@ function PairingMap() {
 		}
 
 		var index = this.getIndex(id);
-		if (index == -1) {
+		if (index === -1) {
 			index = this.collaborators.length;
 			var multipleIds = Array.isArray(id) ? id : [id];
 			this.collaborators.push({"id":multipleIds, "name": name, "imageUrl":imageUrl, "group":group});
@@ -52,7 +52,7 @@ function PairingMap() {
 		}
 
 		for (key in data) {
-			if (key != "id") {
+			if (key !== "id") {
 				collaborator[key] = data[key];
 			}
 		}
@@ -70,7 +70,7 @@ function PairingMap() {
 				break;
 			}
 		};
-		
+
 		return index;
 	}
 
@@ -78,7 +78,7 @@ function PairingMap() {
 		var collaborator;
 		var index = this.getIndex(id);
 
-		if (index != -1) {
+		if (index !== -1) {
 			collaborator = this.collaborators[index];
 		}
 		return collaborator;
@@ -102,7 +102,7 @@ function PairingMap() {
 		});
 
 		this.collaborators.forEach(function(collaborator) {
-			nodes.push({"id": collaborator.id, "name": collaborator.name, "group": collaborator.group, "imageUrl": collaborator.imageUrl});	
+			nodes.push({"id": collaborator.id, "name": collaborator.name, "group": collaborator.group, "imageUrl": collaborator.imageUrl});
 		});
 
 		return {"nodes":nodes,"links":links};

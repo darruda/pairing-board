@@ -16,7 +16,7 @@ function GitLogReader(repositoryPath, childProcess) {
 	this.getCommitMessage = function(logInfo) {
 		var result = logInfo.match(MESSAGE_REGEX);
 		if (result == null) {
-			return null;;
+			return null;
 		}
 
 		return result[1];
@@ -26,8 +26,8 @@ function GitLogReader(repositoryPath, childProcess) {
 	this.getPairingInfo = function(message) {
 		var result = message.match(PAIRING_REGEX);
 
-		if (result == null) {
-			return null;;
+		if (result === null) {
+			return null;
 		}
 
 		return result[1];
@@ -70,7 +70,7 @@ function GitLogReader(repositoryPath, childProcess) {
 			}).filter(function(pair) {
 				return pair.length;
 			});
-			
+
 			return pairs;
 		});
 	};
