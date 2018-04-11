@@ -1,11 +1,11 @@
-var Core = require('./core-functions.js');
-var _ = require('underscore');
+const Core = require('./core-functions.js');
+const _ = require('underscore');
 
 function PairingMap() {
-	var self = this;
+	const self = this;
 	this.map = [];
 	this.collaborators = [];
-	var core = new Core();
+	const core = new Core();
 
 	this.addLink = function(source, target) {
 		var link = this.getLink(source, target);
@@ -15,7 +15,7 @@ function PairingMap() {
 			link.pairings = link.pairings + 1;
 		}
 		return link;
-	}
+	};
 
 	this.getLink = function(source, target) {
 		return _.find(this.map, function(link) {
@@ -23,7 +23,7 @@ function PairingMap() {
 				   || (self.compare(link.source, target) && self.compare(link.target, source));
 
 		});
-	}
+	};
 
 	this.compare = function(element1, element2) {
 		return element1.localeCompare(element2, 'pt-BR', {sensitivity: 'base'}) === 0;
@@ -34,7 +34,7 @@ function PairingMap() {
 			throw new Error("ID cannot be null.");
 		}
 
-		var index = this.getIndex(id);
+		let index = this.getIndex(id);
 		if (index === -1) {
 			index = this.collaborators.length;
 			var multipleIds = Array.isArray(id) ? id : [id];
@@ -44,9 +44,9 @@ function PairingMap() {
 	}
 
 	this.updateCollaborator = function(id, data) {
-		var collaborator = this.getCollaborator(id);
+		const collaborator = this.getCollaborator(id);
 		if (!collaborator) {
-			var error = new Error("Cannot find the collaborator.");
+			const error = new Error("Cannot find the collaborator.");
 			error.name = "CollaboratorNotFoundException";
 			throw error;
 		}
@@ -61,28 +61,28 @@ function PairingMap() {
 	};
 
 	this.getIndex = function(searchId) {
-		var index = -1;
-		for (var i = 0; i < this.collaborators.length; i++) {
-			var collaborator = this.collaborators[i];
+		let index = -1;
+		for (let i = 0; i < this.collaborators.length; i++) {
+			const collaborator = this.collaborators[i];
 
 			if (collaborator.id.some(id => self.compare(id, searchId))) {
 				index = i;
 				break;
 			}
-		};
+		}
 
 		return index;
-	}
+	};
 
 	this.getCollaborator = function(id) {
-		var collaborator;
-		var index = this.getIndex(id);
+		let collaborator;
+		const index = this.getIndex(id);
 
 		if (index !== -1) {
 			collaborator = this.collaborators[index];
 		}
 		return collaborator;
-	}
+	};
 
 	this.addPairs = function(pairs) {
 	    core.calculatePairs(pairs).forEach(function(pair) {
@@ -91,12 +91,12 @@ function PairingMap() {
 	};
 
 	this.build = function() {
-		var nodes = [];
-		var links = [];
+		const nodes = [];
+		const links = [];
 
 		this.map.forEach(function(link) {
-			var sourceIndex = self.addCollaborator(link.source, link.source, null, 1);
-			var targetIndex = self.addCollaborator(link.target, link.target, null, 1);
+			const sourceIndex = self.addCollaborator(link.source, link.source, null, 1);
+			const targetIndex = self.addCollaborator(link.target, link.target, null, 1);
 
 			links.push({"source":sourceIndex,"target":targetIndex,"pairings":link.pairings});
 		});

@@ -1,7 +1,7 @@
 var PairingMap = require('../src/pairing-map.js');
 
 describe("Link beetween people checking", function() {
-	
+
 	it("Should add a new pairing link.", function() {
     	var pairingMap = new PairingMap();
     	pairingMap.addLink('john', 'bob');
@@ -9,7 +9,7 @@ describe("Link beetween people checking", function() {
     });
 
 	it("Should return a link by the pair.", function() {
-		var pairingMap = new PairingMap();
+	    var pairingMap = new PairingMap();
     	pairingMap.addLink('john', 'bob');
     	var link = pairingMap.getLink('john', 'bob');
     	expect(link).toBeDefined();
@@ -39,7 +39,7 @@ describe("Link beetween people checking", function() {
     	var link = pairingMap.getLink('bob', 'john');
     	expect(link.pairings).toBe(3);
     });
-	
+
     it("ID comparison should be non case sensitive.", function() {
         var pairingMap = new PairingMap();
         expect(pairingMap.compare('John', 'john')).toBeTruthy();
@@ -103,7 +103,7 @@ describe("Collaborator features.", function() {
     it("A collaborator with multiple IDs should be sought by any one of its ID.", function() {
         var pairingMap = new PairingMap();
         pairingMap.addCollaborator(['john', 'John S']);
-        
+
         expect(pairingMap.getIndex('john')).toBe(0);
         expect(pairingMap.getIndex('John S')).toBe(0);
     });
@@ -138,7 +138,7 @@ describe("Collaborator features.", function() {
         var pairingMap = new PairingMap();
         pairingMap.addCollaborator("john", "John Simpson", "http://localhost/avatar/simpson.jpg", 1);
         pairingMap.updateCollaborator('john', {"id": "j123"});
-        
+
         expect(pairingMap.collaborators[0]).toEqual({"id": ['john'], "name": 'John Simpson', "imageUrl": 'http://localhost/avatar/simpson.jpg', "group": 1});
     });
 

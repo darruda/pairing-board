@@ -1,9 +1,9 @@
 function Core() {
-	var self = this;
+	const self = this;
 
 	this.splitGroup = function(group) {
-		var remainingGroup = group.slice().reverse();
-		var splitPairs = [];
+		const remainingGroup = group.slice().reverse();
+		const splitPairs = [];
 
 		while (remainingGroup.length > 1) {
 	    	var pairDriver = remainingGroup.pop();
@@ -13,10 +13,10 @@ function Core() {
 	        });
     	}
         return splitPairs;
-	}
+	};
 
 	this.calculatePairs = function(pairs) {
-		var calculatedPairs = [];
+		let calculatedPairs = [];
 		pairs.forEach(function(pair) {
 			if (pair.length > 2) {
 				var newPairs = self.splitGroup(pair);

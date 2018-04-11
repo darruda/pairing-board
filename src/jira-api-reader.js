@@ -1,11 +1,11 @@
 function JiraApiReader() {
-	var self = this;
-	var users = [];
-	var pairs = [];
+	const self = this;
+	const users = [];
+	const pairs = [];
 
 	function appendWorkStream(workstream) {
 		if (workstream) {
-			var pair = [];
+			const pair = [];
 			workstream.forEach(function(user) {
 				addUserInfo(user);
 				pair.push(user.key);
@@ -23,7 +23,7 @@ function JiraApiReader() {
 
 	this.getPairs = function(issue) {
 		return pairs;
-	}
+	};
 
 
 	this.getUsers = function() {

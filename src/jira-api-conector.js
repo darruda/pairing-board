@@ -1,11 +1,11 @@
-var Promise = require("bluebird");
-var JiraApiReader = require('./jira-api-reader.js');
+const Promise = require("bluebird");
+const JiraApiReader = require('./jira-api-reader.js');
 
 function JiraApiConector(config, httpsLib) {
 	validateConfiguration(config);
-	jiraApiReader = new JiraApiReader();
-	
-	var https;
+	const jiraApiReader = new JiraApiReader();
+
+	let https;
 	if (httpsLib) {
 		https = httpsLib;
 	} else {
@@ -13,8 +13,8 @@ function JiraApiConector(config, httpsLib) {
 	}
 
 	function validateConfiguration(config) {
-		var requiredKeys = ["hostname", "url", "jql", "base64Auth"];
-		var missingKeys = [];
+		const requiredKeys = ["hostname", "url", "jql", "base64Auth"];
+		let missingKeys = [];
 		if (config) {
 			requiredKeys.forEach(key => {
 				if (!config[key]) {
@@ -32,8 +32,8 @@ function JiraApiConector(config, httpsLib) {
 		}
 	}
 
-	var getRequestPath = function() {
-		var path = config.url .concat("?jql=", encodeURIComponent(config.jql));
+	const getRequestPath = function() {
+		let path = config.url.concat("?jql=", encodeURIComponent(config.jql));
 		if (config.fields && config.fields.length) {
 			path = path.concat("&", "fields=", config.fields.join(','));
 		}
@@ -42,7 +42,7 @@ function JiraApiConector(config, httpsLib) {
 
 	this.getIssues = function() {
 		return new Promise(function (resolve, reject) {
-			var options = {
+			const options = {
 		        method: 'GET',
 		        hostname: config.hostname,
 		        port: 443,
@@ -54,7 +54,7 @@ function JiraApiConector(config, httpsLib) {
 		        }
 		    };
 
-		    var fullData = '';
+		    let fullData = '';
 		    https.get(options, restResponse => {
 		      if (restResponse.statusCode >= 300) {
 		          reject(new Error(`Error ${restResponse.statusCode} during Jira informantion retrieve.`));

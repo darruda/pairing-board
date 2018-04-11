@@ -1,8 +1,8 @@
 const BREAK_LINE = require('os').EOL;
-var Promise = require("bluebird");
+const Promise = require("bluebird");
 
 function GitLogReader(repositoryPath, childProcess) {
-	var self = this;
+	const self = this;
 	this.repositoryPath = repositoryPath;
 	if (childProcess) {
 		this.childProcess = childProcess;
@@ -10,12 +10,12 @@ function GitLogReader(repositoryPath, childProcess) {
 		this.childProcess = require('child_process');
 	}
 
-	var MESSAGE_REGEX = new RegExp("<(.+)><(.+)><(.+)>");
-	var PAIRING_REGEX = "\\[([\\w\\s,]+)\\]";
+	const MESSAGE_REGEX = new RegExp("<(.+)><(.+)><(.+)>");
+	const PAIRING_REGEX = "\\[([\\w\\s,]+)\\]";
 
 	this.getCommitMessage = function(logInfo) {
-		var result = logInfo.match(MESSAGE_REGEX);
-		if (result == null) {
+		const result = logInfo.match(MESSAGE_REGEX);
+		if (result === null) {
 			return null;
 		}
 
@@ -24,7 +24,7 @@ function GitLogReader(repositoryPath, childProcess) {
 	};
 
 	this.getPairingInfo = function(message) {
-		var result = message.match(PAIRING_REGEX);
+		const result = message.match(PAIRING_REGEX);
 
 		if (result === null) {
 			return null;
@@ -34,7 +34,7 @@ function GitLogReader(repositoryPath, childProcess) {
 	};
 
 	this.getCollaborators = function(message) {
-		var pairingInfo = this.getPairingInfo(message);
+		const pairingInfo = this.getPairingInfo(message);
 
 		if (!pairingInfo) {
 			return [];
@@ -47,7 +47,7 @@ function GitLogReader(repositoryPath, childProcess) {
 
 	this.getLogs = function(since) {
 		return new Promise(function (resolve, reject) {
-			var command = "git".concat(" --git-dir=", repositoryPath, " log master --pretty=format:%s");
+			let command = "git".concat(" --git-dir=", repositoryPath, " log master --pretty=format:%s");
 			if (since) {
 				command = command.concat(" --since=", since.toISOString());
 			}
@@ -63,7 +63,7 @@ function GitLogReader(repositoryPath, childProcess) {
 
 	this.getPairs = function(since) {
 		return this.getLogs(since).then(function(logs) {
-			var messages = logs.split(BREAK_LINE);
+			const messages = logs.split(BREAK_LINE);
 
 			var pairs = messages.map(function(message) {
 				return self.getCollaborators(message);
