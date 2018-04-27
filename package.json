@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.1",
+    "https": "^1.0.0",
     "os": "^0.1.1",
     "underscore": "^1.8.3"
   },
